@@ -16,3 +16,12 @@ def Euler_Totient(n):      # essentially the relative primes to a number counter
         if Euclidean(1,n) == 1:     # the result will be 1
             count += 1         # counting the amount of results
         return count
+    
+e = random.randint(1, Euler_Totient(n))
+if Euclidean(e, Euler_Totient(n)) == 1:
+    e = e
+else:
+    e = random.randint(1, Euler_Totient(n))
+
+#d * e % Euler_Totient(n) = 1 rearranged
+d = (Euler_Totient(n) - 1) / e
