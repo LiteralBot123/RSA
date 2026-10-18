@@ -1,14 +1,15 @@
 import random
+from sympy import randprime
 
-a = random.randint(1,200)
-b = random.randint(1,200)
-n = a*b
+p = randprime(200,400)
+q = randprime(200,400)
+n = p*q
 
-def Euclidean(a,b):      # essentially far simplifies the two numbers to check if they are coprime
-    if a == 0:
-        return b
+def Euclidean(p,q):      # essentially far simplifies the two numbers to check if they are coprime
+    if p == 0:
+        return q
     else: 
-        return Euclidean(b % a, a)
+        return Euclidean(q % p, p)
 
 def Euler_Totient(n):      # essentially the relative primes to a number counter.
     count = 1
@@ -25,3 +26,19 @@ else:
 
 #d * e % Euler_Totient(n) = 1 rearranged
 d = (Euler_Totient(n) - 1) / e
+
+Public_Key = (e,n)
+Private_Key = (d,n)
+
+print(Public_Key, Private_Key)
+
+def Encryption(Message, Encrypted_Message):
+    global e
+    global n
+    Encrypted_Message = []
+    Message = input('What message do you wish to be encoded and sent? ')
+    for i in Message:
+        i = ord(i)
+        Encrypted_Value = i^e % n
+        Encrypted_Message.append(Encrypted_Value)
+    return Encrypted_Message
