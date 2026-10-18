@@ -27,21 +27,28 @@ while True:
         e = random.randint(1, Euler_Totient(n))     # if not, continue
 
 #d * e % Euler_Totient(n) = 1 rearranged
-d = (Euler_Totient(n) - 1) / e
+d = 1
+while True:
+    if (d*e) % Euler_Totient(n) != 1:
+        d += 1
+    else:
+        d = d
+        break
 
 Public_Key = (e,n)
 Private_Key = (d,n)
 
 print(Public_Key, Private_Key)
 
-def Encryption(Message, Encrypted_Message):
+def Encryption():
     global e
     global n
     Encrypted_Message = []
     Message = input('What message do you wish to be encoded and sent? ')
     for i in Message:
         i = ord(i)
-        Encrypted_Value = i**e % n
+        Encrypted_Value = pow(i,e,n)
         Encrypted_Message.append(Encrypted_Value)
     return Encrypted_Message
 
+Encryption()
