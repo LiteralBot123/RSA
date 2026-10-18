@@ -14,15 +14,17 @@ def Euclidean(p,q):      # essentially far simplifies the two numbers to check i
 def Euler_Totient(n):      # essentially the relative primes to a number counter.
     count = 1
     for i in range(2,n):            # since Euclidean checks continuously to find lcf, if they are coprime,
-        if Euclidean(1,n) == 1:     # the result will be 1
+        if Euclidean(i,n) == 1:     # the result will be 1
             count += 1         # counting the amount of results
-        return count
-    
-e = random.randint(1, Euler_Totient(n))
-if Euclidean(e, Euler_Totient(n)) == 1:
-    e = e
-else:
-    e = random.randint(1, Euler_Totient(n))
+    return count
+
+while True:
+    e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
+    if Euclidean(e, Euler_Totient(n)) == 1:
+        e = e                   
+        break               # if it works, end
+    else:
+        e = random.randint(1, Euler_Totient(n))     # if not, continue
 
 #d * e % Euler_Totient(n) = 1 rearranged
 d = (Euler_Totient(n) - 1) / e
@@ -39,6 +41,7 @@ def Encryption(Message, Encrypted_Message):
     Message = input('What message do you wish to be encoded and sent? ')
     for i in Message:
         i = ord(i)
-        Encrypted_Value = i^e % n
+        Encrypted_Value = i**e % n
         Encrypted_Message.append(Encrypted_Value)
     return Encrypted_Message
+
