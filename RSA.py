@@ -40,17 +40,38 @@ while True:
 Public_Key = (e,n)
 Private_Key = (d,n)
 
+
+
 print(Public_Key, Private_Key)
 
-def Encryption():
-    global e
+
+
+# message encryption
+def Encryption():           
+    global e        # takes from outside
     global n
     Encrypted_Message = []
     Message = input('What message do you wish to be encoded and sent? ')
     for i in Message:
         i = ord(i)
-        Encrypted_Value = pow(i,e,n)
+        Encrypted_Value = pow(i,e,n)            # formula to encrypt
         Encrypted_Message.append(Encrypted_Value)
+    print(Encrypted_Message)                    # print out the message getting sent
     return Encrypted_Message
 
-Encryption()
+
+
+def Decryption(Encrypted_Text):
+    global d
+    global n
+    Decrypted_Message = ''      # string so it looks good when decoded and not list format
+    for i in Encrypted_Text:    # for each number value
+        Decrypted_Value = pow(i,d,n)    # use formula plaintext = ciphertext^d % n
+        Decrypted_Message.append(chr(Decrypted_Value))
+    print(Decrypted_Message)
+    return(Decrypted_Message)
+    
+
+
+run = Encryption()
+Decryption(run)
