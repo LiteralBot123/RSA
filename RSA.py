@@ -27,9 +27,11 @@ while True:
         e = random.randint(1, Euler_Totient(n))     # if not, continue
 
 #d * e % Euler_Totient(n) = 1 rearranged
+Totient = Euler_Totient(n)
+
 d = 1
 while True:
-    if (d*e) % Euler_Totient(n) != 1:
+    if (d*e) % Totient != 1:
         d += 1
     else:
         d = d
