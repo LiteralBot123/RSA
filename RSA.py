@@ -18,27 +18,40 @@ def Euler_Totient(n):      # essentially the relative primes to a number   count
             count += 1         # counting the amount of results
     return count
 
-while True:
-    e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
-    if Euclidean(e, Euler_Totient(n)) == 1:
-        e = e                   
-        break               # if it works, end
-    else:
-        e = random.randint(1, Euler_Totient(n))     # if not, continue
+def E_Generation():
+    while True:
+        e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
+        if Euclidean(e, Euler_Totient(n)) == 1:
+            e = e                   
+            return e               # if it works, end
+        else:
+            e = random.randint(1, Euler_Totient(n))     # if not, continue
 
+
+def D_Generation():
 #d * e % Euler_Totient(n) = 1 rearranged
-Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
-
-d = 1
-while True:
-    if (d*e) % Totient != 1:
-        d += 1
-    else:
-        d = d
-        break
-
+    Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
+    d = 1
+    while True:
+        if (d*e) % Totient != 1:
+            d += 1
+        else:
+            d = d
+            return d
 
 
+def All_Together():         # purely for the graphing later on 
+    p = randprime(200,400)
+    q = randprime(200,400)
+    n = p*q
+    Euler_Totient(n)
+    E_Generation()
+    D_Generation()
+    return d, e, n
+
+
+e = E_Generation()
+d = D_Generation()
 Public_Key = (e,n)
 Private_Key = (d,n)
 
@@ -73,6 +86,19 @@ def Decryption(Encrypted_Text):
     print(Decrypted_Message)
     return(Decrypted_Message)
     
+
+# message encryption
+def Encryption_Take_Input(word):           
+    global e        # takes from outside
+    global n
+    Encrypted_Message = []
+    Message = word
+    for i in Message:
+        i = ord(i)
+        Encrypted_Value = pow(i,e,n)            # formula to encrypt
+        Encrypted_Message.append(Encrypted_Value)
+    print(Encrypted_Message)                    # print out the message getting sent
+    return Encrypted_Message
 
 
 run = Encryption()

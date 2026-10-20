@@ -41,50 +41,65 @@ Public_Key = (e,n)
 
 
 # finding p and q (reverse engineering formula)
-n = Public_Key[1]
-if n % 2 == 0:
-    p = 2
-    q = int(n/2)     # checking if divisible by even
-else:
-    checker = 3
-    while True:         # checking if divisible by different odd numbers 
-        if checker <= n:
-            if n % checker == 0:
-                checker = checker
-                break
-            else:
-                checker += 2
-        else:                        # cause RSA uses two large prime numbers, 
-            checker = checker        # the largest number the checker gets will be the primes
+def Find_P_And_Q():
+    n = Public_Key[1]
+    if n % 2 == 0:
+        p = 2
+        q = int(n/2)     # checking if divisible by even
+    else:
+        checker = 3
+        while True:         # checking if divisible by different odd numbers 
+            if checker <= n:
+                if n % checker == 0:
+                    checker = checker
+                    return checker
+                else:
+                    checker += 2
+            else:                        # cause RSA uses two large prime numbers, 
+                checker = checker        # the largest number the checker gets will be the primes
+                return checker
 
 
-
+checker = Find_P_And_Q()
 p = checker
 q = int(n / p)
 
 
 
-while True:
-    e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
-    if Euclidean(e, Euler_Totient(n)) == 1:
-        e = e                   
-        break               # if it works, end
-    else:
-        e = random.randint(1, Euler_Totient(n))     # if not, continue
+def E_Generation():
+    while True:
+        e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
+        if Euclidean(e, Euler_Totient(n)) == 1:
+            e = e                   
+            return e               # if it works, end
+        else:
+            e = random.randint(1, Euler_Totient(n))     # if not, continue
 
+
+def D_Generation():
 #d * e % Euler_Totient(n) = 1 rearranged
-Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
-
-d = 1
-while True:
-    if (d*e) % Totient != 1:
-        d += 1
-    else:
-        d = d
-        break
-
+    Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
+    d = 1
+    while True:
+        if (d*e) % Totient != 1:
+            d += 1
+        else:
+            d = d
+            return d
 
 
+
+def All_Together():         # purely for the graphing later on 
+    p = randprime(200,400)
+    q = randprime(200,400)
+    n = p*q
+    Euler_Totient(n)
+    E_Generation()
+    D_Generation()
+    return d, e, n
+
+
+d = D_Generation()
 Private_Key = (d,n)
 
 
