@@ -11,9 +11,9 @@ def Euclidean(p,q):      # essentially far simplifies the two numbers to check i
     else: 
         return Euclidean(q % p, p)
 
-def Euler_Totient(n):      # essentially the relative primes to a number counter.
+def Euler_Totient(n):      # essentially the relative primes to a number   counter.
     count = 1
-    for i in range(2,n):            # since Euclidean checks continuously to find lcf, if they are coprime,
+    for i in range(2,n):            # since Euclidean checks continuously to find gcf, if they are coprime,
         if Euclidean(i,n) == 1:     # the result will be 1
             count += 1         # counting the amount of results
     return count
@@ -27,7 +27,7 @@ while True:
         e = random.randint(1, Euler_Totient(n))     # if not, continue
 
 #d * e % Euler_Totient(n) = 1 rearranged
-Totient = Euler_Totient(n)
+Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
 
 d = 1
 while True:
@@ -36,6 +36,8 @@ while True:
     else:
         d = d
         break
+
+
 
 Public_Key = (e,n)
 Private_Key = (d,n)
@@ -64,7 +66,7 @@ def Encryption():
 def Decryption(Encrypted_Text):
     global d
     global n
-    Decrypted_Message = ''      # string so it looks good when decoded and not list format
+    Decrypted_Message = []      # string so it looks good when decoded and not list format
     for i in Encrypted_Text:    # for each number value
         Decrypted_Value = pow(i,d,n)    # use formula plaintext = ciphertext^d % n
         Decrypted_Message.append(chr(Decrypted_Value))
