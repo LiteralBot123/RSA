@@ -1,3 +1,4 @@
+# setting the actual values as the previous code did
 import random
 from sympy import randprime
 
@@ -31,20 +32,75 @@ while True:
 Public_Key = (e,n)
 
 
+
+
+
+
+# actually computing and decoding with only public key as info
+
+
+
 # finding p and q (reverse engineering formula)
-n = Public_Key(n)
+n = Public_Key[1]
 if n % 2 == 0:
     p = 2
-    q = n/2     # checking if divisible by even
+    q = int(n/2)     # checking if divisible by even
 else:
     checker = 3
     while True:         # checking if divisible by different odd numbers 
         if checker <= n:
             if n % checker == 0:
                 checker = checker
+                break
             else:
-                checker += 1
+                checker += 2
         else:                        # cause RSA uses two large prime numbers, 
             checker = checker        # the largest number the checker gets will be the primes
 
 
+
+p = checker
+q = int(n / p)
+
+
+
+while True:
+    e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
+    if Euclidean(e, Euler_Totient(n)) == 1:
+        e = e                   
+        break               # if it works, end
+    else:
+        e = random.randint(1, Euler_Totient(n))     # if not, continue
+
+#d * e % Euler_Totient(n) = 1 rearranged
+Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
+
+d = 1
+while True:
+    if (d*e) % Totient != 1:
+        d += 1
+    else:
+        d = d
+        break
+
+
+
+Private_Key = (d,n)
+
+
+
+
+# time to see if it works by attempting to decrypt it
+def Decryption(Encrypted_Text):
+    global d
+    global n
+    Decrypted_Message = []      # string so it looks good when decoded and not list format
+    for i in Encrypted_Text:    # for each number value
+        Decrypted_Value = pow(i,d,n)    # use formula plaintext = ciphertext^d % n
+        Decrypted_Message.append(chr(Decrypted_Value))
+    print(Decrypted_Message)
+    return(Decrypted_Message)
+
+
+
+Decryption()
