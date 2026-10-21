@@ -1,5 +1,6 @@
 # setting the actual values as the previous code did
 import random
+import time
 from sympy import randprime
 
 p = randprime(200,400)
@@ -104,6 +105,18 @@ Private_Key = (d,n)
 
 
 
+# message encryption
+def Encryption():           
+    global e        # takes from outside
+    global n
+    Encrypted_Message = []
+    Message = input('What message do you wish to be encoded and sent? ')
+    for i in Message:
+        i = ord(i)
+        Encrypted_Value = pow(i,e,n)            # formula to encrypt
+        Encrypted_Message.append(Encrypted_Value)
+    print(Encrypted_Message)                    # print out the message getting sent
+    return Encrypted_Message
 
 # time to see if it works by attempting to decrypt it
 def Decryption(Encrypted_Text):
@@ -118,4 +131,29 @@ def Decryption(Encrypted_Text):
 
 
 
-Decryption()
+Ciphertext = Encryption()
+Decryption(Ciphertext)
+
+
+
+def RSADecoding():
+    count = 1
+    factors = 10
+    RSADecoder_Vals = []
+    p = randprime(1, factors)
+    q = randprime(1, factors)
+    n = p *q
+    while count <= 10:
+        RSADecoding_Start = time.time()
+        Find_P_And_Q()
+        RSA_Decoding_End = time.time()
+        RSA_Decoding_Time_Taken = RSA_Decoding_End - RSADecoding_Start
+        RSADecoder_Vals.append(RSA_Decoding_Time_Taken)
+        factors *= 10
+        count += 1
+    print(RSADecoder_Vals)
+    return RSADecoder_Vals
+
+
+
+RSADecoding()

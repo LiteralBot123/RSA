@@ -1,5 +1,6 @@
 import random
 from sympy import randprime
+import time
 
 p = randprime(200,400)
 q = randprime(200,400)
@@ -87,19 +88,30 @@ def Decryption(Encrypted_Text):
     return(Decrypted_Message)
     
 
-# message encryption
-def Encryption_Take_Input(word):           
-    global e        # takes from outside
-    global n
-    Encrypted_Message = []
-    Message = word
-    for i in Message:
-        i = ord(i)
-        Encrypted_Value = pow(i,e,n)            # formula to encrypt
-        Encrypted_Message.append(Encrypted_Value)
-    print(Encrypted_Message)                    # print out the message getting sent
-    return Encrypted_Message
 
-
-run = Encryption()
+run = Encryption()  # stored in variable for decryption
 Decryption(run)
+
+
+
+# message encryption
+def Get_Factors():   
+    count = 1
+    factors = 10   
+    RSA_Vals = []     
+    while count <= 10:
+        RSA_Start = time.time()
+        p = randprime(1, factors)
+        q = randprime(1, factors)
+        n = p * q
+        RSA_End = time.time()
+        RSA_Time_Taken = RSA_End - RSA_Start
+        RSA_Vals.append(RSA_Time_Taken)
+        factors *= 10
+        count += 1
+    print(RSA_Vals)
+    return(RSA_Vals)
+
+
+
+Get_Factors()
