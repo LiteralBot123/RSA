@@ -2,9 +2,7 @@ import random
 from sympy import randprime
 import time
 
-p = randprime(200,400)
-q = randprime(200,400)
-n = p*q
+
 
 def Euclidean(p,q):      # essentially far simplifies the two numbers to check if they are coprime
     if p == 0:
@@ -19,19 +17,18 @@ def Euler_Totient(n):      # essentially the relative primes to a number   count
             count += 1         # counting the amount of results
     return count
 
-def E_Generation():
+def E_Generation(Totient):
     while True:
-        e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
-        if Euclidean(e, Euler_Totient(n)) == 1:
+        e = random.randint(1, Totient)    # generate e and see if it works in the formula
+        if Euclidean(e, Totient) == 1:
             e = e                   
             return e               # if it works, end
         else:
-            e = random.randint(1, Euler_Totient(n))     # if not, continue
+            e = random.randint(1, Totient)     # if not, continue
 
 
-def D_Generation():
+def D_Generation(e, Totient):
 #d * e % Euler_Totient(n) = 1 rearranged
-    Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
     d = 1
     while True:
         if (d*e) % Totient != 1:
@@ -41,24 +38,31 @@ def D_Generation():
             return d
 
 
-def All_Together():         # purely for the graphing later on 
-    p = randprime(200,400)
-    q = randprime(200,400)
-    n = p*q
-    Euler_Totient(n)
-    E_Generation()
-    D_Generation()
-    return d, e, n
 
+p = randprime(200,400)
+q = randprime(200,400)
+n = p*q
+Totient = Euler_Totient(n) # in variable so doesn't have to recompute every time
 
-e = E_Generation()
-d = D_Generation()
+e = E_Generation(Totient)
+d = D_Generation(e, Totient)
 Public_Key = (e,n)
 Private_Key = (d,n)
 
+def All_Together():         # purely for the graphing later on 
+    p_Graphed = randprime(200,400)
+    q_Graphed = randprime(200,400)
+    n_Graphed = p_Graphed * q_Graphed
+    Totient_Graphed = Euler_Totient(n_Graphed)
+    e_Graphed = E_Generation(Totient_Graphed)
+    d_Graphed = D_Generation(e_Graphed, Totient_Graphed)
+    return d_Graphed, e_Graphed, n_Graphed
 
 
-print(Public_Key, Private_Key)
+
+
+
+print(f'Public Key: ', Public_Key, f'Private Key: ', Private_Key)
 
 
 
@@ -99,7 +103,7 @@ def Get_Factors():
     count = 1
     factors = 10   
     RSA_Vals = []     
-    while count <= 10:
+    while count <= 5:
         RSA_Start = time.time()
         p = randprime(1, factors)
         q = randprime(1, factors)

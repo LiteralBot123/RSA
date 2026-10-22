@@ -3,9 +3,7 @@ import random
 import time
 from sympy import randprime
 
-p = randprime(200,400)
-q = randprime(200,400)
-n = p*q
+
 
 def Euclidean(p,q):      # essentially far simplifies the two numbers to check if they are coprime
     if p == 0:
@@ -20,66 +18,18 @@ def Euler_Totient(n):      # essentially the relative primes to a number   count
             count += 1         # counting the amount of results
     return count
 
-while True:
-    e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
-    if Euclidean(e, Euler_Totient(n)) == 1:
-        e = e                   
-        break               # if it works, end
-    else:
-        e = random.randint(1, Euler_Totient(n))     # if not, continue
-
-
-
-Public_Key = (e,n)
-
-
-
-
-
-
-# actually computing and decoding with only public key as info
-
-
-
-# finding p and q (reverse engineering formula)
-def Find_P_And_Q():
-    n = Public_Key[1]
-    if n % 2 == 0:
-        p = 2
-        q = int(n/2)     # checking if divisible by even
-    else:
-        checker = 3
-        while True:         # checking if divisible by different odd numbers 
-            if checker <= n:
-                if n % checker == 0:
-                    checker = checker
-                    return checker
-                else:
-                    checker += 2
-            else:                        # cause RSA uses two large prime numbers, 
-                checker = checker        # the largest number the checker gets will be the primes
-                return checker
-
-
-checker = Find_P_And_Q()
-p = checker
-q = int(n / p)
-
-
-
-def E_Generation():
+def E_Generation(Totient):
     while True:
-        e = random.randint(1, Euler_Totient(n))    # generate e and see if it works in the formula
-        if Euclidean(e, Euler_Totient(n)) == 1:
+        e = random.randint(1, Totient)    # generate e and see if it works in the formula
+        if Euclidean(e, Totient) == 1:
             e = e                   
             return e               # if it works, end
         else:
-            e = random.randint(1, Euler_Totient(n))     # if not, continue
+            e = random.randint(1, Totient)     # if not, continue
 
 
-def D_Generation():
+def D_Generation(e, Totient):
 #d * e % Euler_Totient(n) = 1 rearranged
-    Totient = Euler_Totient(n)   # in variable so doesn't have to recompute constantly
     d = 1
     while True:
         if (d*e) % Totient != 1:
@@ -88,20 +38,50 @@ def D_Generation():
             d = d
             return d
 
+p = randprime(200,400)
+q = randprime(200,400)
+n = p * q
+Totient = Euler_Totient(n)
+
+e = E_Generation(Totient)
+d = D_Generation(e, Totient)
+Public_Key = (e,n)
+Private_Key = (d,n)
+
+# actually computing and decoding with only public key as info
+
+
+
+# finding p and q (reverse engineering formula)
+def Find_P_And_Q(n_To_Find):
+    if n_To_Find % 2 == 0:
+        p = 2
+        q = int(n/2)     # checking if divisible by even
+    else:
+        checker = 3
+        while True:         # checking if divisible by different odd numbers 
+            if checker <= n_To_Find:
+                if n_To_Find % checker == 0:
+                    checker = checker
+                    return checker
+                else:
+                    checker += 2
+            else:                        # cause RSA uses two large prime numbers, 
+                checker = checker        # the largest number the checker gets will be the primes
+                return n_To_Find
+
+
+
 
 
 def All_Together():         # purely for the graphing later on 
-    p = randprime(200,400)
-    q = randprime(200,400)
-    n = p*q
-    Euler_Totient(n)
-    E_Generation()
-    D_Generation()
-    return d, e, n
-
-
-d = D_Generation()
-Private_Key = (d,n)
+    p_Graphed = randprime(200,400)
+    q_Graphed = randprime(200,400)
+    n_Graphed = p_Graphed * q_Graphed
+    Totient_Graphed = Euler_Totient(n_Graphed)
+    e_Graphed = E_Generation(Totient_Graphed)
+    d_Graphed = D_Generation(e_Graphed, Totient_Graphed)
+    return d_Graphed, e_Graphed, n_Graphed
 
 
 
@@ -136,24 +116,28 @@ Decryption(Ciphertext)
 
 
 
-def RSADecoding():
+def RSA_Decoding():
     count = 1
     factors = 10
     RSADecoder_Vals = []
-    p = randprime(1, factors)
-    q = randprime(1, factors)
-    n = p *q
-    while count <= 10:
+    p_Decode = randprime(2, factors)
+    q_Decode= randprime(2, factors)
+    n_Decode = p_Decode * q_Decode
+    while count <= 5:
+        All_Together()
         RSADecoding_Start = time.time()
-        Find_P_And_Q()
+        Find_P_And_Q(n_Decode)
         RSA_Decoding_End = time.time()
         RSA_Decoding_Time_Taken = RSA_Decoding_End - RSADecoding_Start
         RSADecoder_Vals.append(RSA_Decoding_Time_Taken)
         factors *= 10
         count += 1
+        p_Decode = randprime(1, factors)
+        q_Decode = randprime(1, factors)
+        n_Decode = p_Decode * q_Decode
     print(RSADecoder_Vals)
     return RSADecoder_Vals
 
 
 
-RSADecoding()
+RSA_Decoding()
